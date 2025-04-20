@@ -1,0 +1,10 @@
+streamlit
+langchain
+chromadb
+sentence-transformers
+pymupdf
+transformers
+torch
+ollama
+python-dotenv
+
