@@ -1,7 +1,7 @@
 """
 vector_store.py
 ---------------
-Handles embedding storage and similarity search using ChromaDB with DuckDB backend.
+Handles embedding storage and similarity search using ChromaDB.
 """
 
 import logging
@@ -9,8 +9,6 @@ from datetime import datetime
 from langchain.vectorstores import Chroma
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.schema import Document
-from chromadb.config import Settings
-from chromadb import PersistentClient
 
 class VectorStore:
     def __init__(self, persist_directory: str = None):
@@ -29,17 +27,11 @@ class VectorStore:
             model_name="sentence-transformers/all-mpnet-base-v2"
         )
 
-        # Configure Chroma to use DuckDB as backend
-        self.chroma_settings = Settings(chroma_db_impl="duckdb")
-
-        # Create a persistent client with DuckDB
-        self.client = PersistentClient(path=self.persist_directory, settings=self.chroma_settings)
-
         # Initialize Chroma vector store
         self.db = Chroma(
-            client=self.client,
             collection_name="rag_collection",
-            embedding_function=self.embedding_model
+            embedding_function=self.embedding_model,
+            persist_directory=self.persist_directory
         )
 
     def add_documents(self, documents: list[Document]):
